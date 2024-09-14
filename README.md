@@ -1,2 +1,45 @@
-# flatten
-Tool for creating a repo structure file and flattened repo file
+# Flatten
+
+Flatten is a tool for creating a repository structure file and a flattened repository file.
+
+## Installation
+
+To use the Flatten tool, copy the flatten repo `fr.sh` script into your repository:
+
+```
+curl -O https://raw.githubusercontent.com/yourusername/flatten/main/fr.sh
+chmod +x fr.sh
+```
+
+## Usage
+
+### Generate Repository Structure
+
+To generate or update the repository structure file:
+
+```
+./fr.sh
+```
+
+This will create a `repo_structure.yaml` file in the current directory, containing the structure of your repository.
+
+### Flatten Repository Contents
+
+To generate the repository structure and flatten the contents of text files:
+
+```
+./fr.sh --ffc
+```
+
+This will create both `repo_structure.yaml` and `flattened_repo.txt` files. The latter will contain the contents of all text files in the repository.
+
+## Features
+
+- Ignores files and directories listed in `.gitignore` and `.flattenignore`
+- Supports common text file formats (py, md, css, html, txt, sh, json, yaml)
+- Skips binary files when flattening
+- Includes text files from all directories in the repository
+
+## Note
+
+Ensure you run the script from the root of your repository for accurate results.

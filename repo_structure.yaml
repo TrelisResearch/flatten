@@ -1,0 +1,14 @@
+planChat
+  - path: /fr.sh
+    type: file
+  - path: /LICENSE
+    type: file
+  - path: /sample_folder
+    type: directory
+    contents:
+    - path: /sample_folder/sample_file_in_folder.txt
+      type: file
+  - path: /README.md
+    type: file
+  - path: /repo_structure.yaml
+    type: file
