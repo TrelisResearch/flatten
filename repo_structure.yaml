@@ -1,6 +1,4 @@
 planChat
-  - path: /fr.sh
-    type: file
   - path: /LICENSE
     type: file
   - path: /sample_folder

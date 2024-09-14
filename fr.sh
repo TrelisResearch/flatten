@@ -72,6 +72,7 @@ print_file_contents() {
         else
             echo "Failed to write contents of $file_path"
         fi
+        echo "" >> "$flattened_file"
         echo "</$file_path>" >> "$flattened_file"
         echo "" >> "$flattened_file"
     else

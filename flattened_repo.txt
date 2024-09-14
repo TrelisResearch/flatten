@@ -1,122 +1,64 @@
-<fr.sh>
-#!/bin/bash
-
-# Function to check if a file/folder should be ignored
-should_ignore() {
-    local item=$1
-    local base_item=$(basename "$item")
-    
-    # Check .gitignore
-    if grep -qE "^\b$base_item\b" .gitignore 2>/dev/null; then
-        return 0
-    fi
-    
-    # Check .flattenignore
-    if [ -f ".flattenignore" ] && grep -qE "^\b$base_item\b" .flattenignore 2>/dev/null; then
-        return 0
-    fi
-    
-    return 1
-}
-
-# Function to generate YAML representation of the file structure
-generate_yaml() {
-    local folder=$1
-    local indent=$2
-    local parent_path=$3
-    find "$folder" -mindepth 1 -maxdepth 1 ! -path '*/\.*' | while read -r item; do
-        local base_item=$(basename "$item")
-        local relative_path="$parent_path/$base_item"
-        if should_ignore "$item"; then
-            continue
-        fi
-        if [ -d "$item" ]; then
-            echo "${indent}- path: $relative_path" >> "$output_file"
-            echo "${indent}  type: directory" >> "$output_file"
-            echo "${indent}  contents:" >> "$output_file"
-            generate_yaml "$item" "  $indent" "$relative_path"
-        else
-            echo "${indent}- path: $relative_path" >> "$output_file"
-            echo "${indent}  type: file" >> "$output_file"
-        fi
-    done
-}
-
-# Function to print file contents
-print_file_contents() {
-    local file_path=$1
-    # Remove leading space if present
-    file_path="${file_path#"${file_path%%[![:space:]]*}"}"
-    # Remove leading slash
-    file_path="${file_path#/}"
-    if [ -d "$file_path" ]; then
-        echo "Skipping directory: $file_path"
-        return
-    fi
-    if [ ! -f "$file_path" ]; then
-        echo "File does not exist: $file_path"
-        return
-    fi
-    if [[ "$file_path" =~ \.(py|md|css|html|txt|sh|json|yaml)$ ]]; then
-        echo "<$file_path>" >> "$flattened_file"
-        if cat "$file_path" >> "$flattened_file"; then
-            echo "Successfully wrote contents of $file_path"
-        else
-            echo "Failed to write contents of $file_path"
-        fi
-        echo "</$file_path>" >> "$flattened_file"
-        echo "" >> "$flattened_file"
-    else
-        echo "Skipping non-text file: $file_path"
-    fi
-}
-
-# Ensure we are in the correct directory
-cd "$(dirname "$0")"
-
-# Set file names
-output_file="repo_structure.yaml"
-flattened_file="flattened_repo.txt"
-
-# Delete existing files if they exist
-rm -f "$output_file" "$flattened_file"
-
-# Generate YAML structure
-echo "planChat" > "$output_file"
-generate_yaml . "  " ""
-echo "YAML file with folder/file structure has been created as $output_file."
-
-# Check if --ffc flag is provided
-if [[ "$1" == "--ffc" ]]; then
-    echo "Flattening repository..."
-    > "$flattened_file"
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*path:[[:space:]]*(.*) ]]; then
-            file_path="${BASH_REMATCH[1]}"
-            if [[ ! "$line" =~ type:[[:space:]]*directory ]]; then
-                print_file_contents "$file_path"
-            else
-                echo "Skipping directory: $file_path"
-            fi
-        fi
-    done < "$output_file"
-    echo "Flattened repository content has been created as $flattened_file."
-else
-    echo "Repository structure created. Use --ffc flag to also flatten the file contents to $flattened_file."
-fi</fr.sh>
-
 <sample_folder/sample_file_in_folder.txt>
-sample text in file in folder</sample_folder/sample_file_in_folder.txt>
+sample text in file in folder
+</sample_folder/sample_file_in_folder.txt>
 
 <README.md>
-# flatten
-Tool for creating a repo structure file and flattened repo file
+# Flatten
+
+Flatten is a tool for creating a repository structure file and a flattened repository file.
+
+## Installation
+
+To use the Flatten tool, copy the flatten repo `fr.sh` script into your repository:
+
+```
+curl -O https://raw.githubusercontent.com/TrelisResearch/flatten/main/fr.sh
+chmod +x fr.sh
+```
+
+## Usage
+
+### Generate Repository Structure
+
+To generate or update the repository structure file:
+
+```
+./fr.sh
+```
+
+This will create a `repo_structure.yaml` file in the current directory, containing the structure of your repository.
+
+### Flatten Repository Contents
+
+To generate the repository structure and flatten the contents of text files:
+
+```
+./fr.sh --ffc
+```
+
+This will create both `repo_structure.yaml` and `flattened_repo.txt` files. The latter will contain the contents of all text files in the repository.
+
+## Features
+
+- Ignores files and directories listed in `.gitignore` and `.flattenignore`
+- Automatically excludes the `fr.sh` script itself from flattening
+- Supports a wide range of text file formats commonly used in programming, including:
+  - Web development (js, ts, jsx, tsx, vue, html, css, scss, less)
+  - Backend languages (py, rb, php, java, go, rs, c, cpp, h, hpp, cs, swift, kt, scala)
+  - Data formats (json, yaml, yml, xml, sql, graphql)
+  - Scripting languages (sh, bash, zsh)
+  - Other languages (r, m, f, f90, jl, lua, pl, pm, t, ps1, bat, asm, s, nim, ex, exs, clj, lisp, hs, erl, elm)
+  - Documentation (md, txt)
+- Skips binary files when flattening
+- Includes text files from all directories in the repository
+
+## Note
+
+Ensure you run the script from the root of your repository for accurate results.
 </README.md>
 
 <repo_structure.yaml>
 planChat
-  - path: /fr.sh
-    type: file
   - path: /LICENSE
     type: file
   - path: /sample_folder
@@ -128,5 +70,6 @@ planChat
     type: file
   - path: /repo_structure.yaml
     type: file
+
 </repo_structure.yaml>
 
