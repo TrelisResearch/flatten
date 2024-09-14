@@ -56,7 +56,7 @@ print_file_contents() {
         echo "File does not exist: $file_path"
         return
     fi
-    if [[ "$file_path" =~ \.(py|md|css|html|txt|sh|json|yaml)$ ]]; then
+    if [[ "$file_path" =~ \.(py|js|ts|jsx|tsx|vue|rb|php|java|go|rs|c|cpp|h|hpp|cs|swift|kt|scala|html|css|scss|less|md|txt|sh|bash|zsh|json|yaml|yml|xml|sql|graphql|r|m|f|f90|jl|lua|pl|pm|t|ps1|bat|asm|s|nim|ex|exs|clj|lisp|hs|erl|elm)$ ]]; then
         echo "<$file_path>" >> "$flattened_file"
         if cat "$file_path" >> "$flattened_file"; then
             echo "Successfully wrote contents of $file_path"

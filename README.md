@@ -36,7 +36,13 @@ This will create both `repo_structure.yaml` and `flattened_repo.txt` files. The 
 ## Features
 
 - Ignores files and directories listed in `.gitignore` and `.flattenignore`
-- Supports common text file formats (py, md, css, html, txt, sh, json, yaml)
+- Supports a wide range of text file formats commonly used in programming, including:
+  - Web development (js, ts, jsx, tsx, vue, html, css, scss, less)
+  - Backend languages (py, rb, php, java, go, rs, c, cpp, h, hpp, cs, swift, kt, scala)
+  - Data formats (json, yaml, yml, xml, sql, graphql)
+  - Scripting languages (sh, bash, zsh)
+  - Other languages (r, m, f, f90, jl, lua, pl, pm, t, ps1, bat, asm, s, nim, ex, exs, clj, lisp, hs, erl, elm)
+  - Documentation (md, txt)
 - Skips binary files when flattening
 - Includes text files from all directories in the repository
 
