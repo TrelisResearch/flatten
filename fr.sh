@@ -5,6 +5,11 @@ should_ignore() {
     local item=$1
     local base_item=$(basename "$item")
     
+    # Check if the file is fr.sh itself
+    if [ "$base_item" = "fr.sh" ]; then
+        return 0
+    fi
+    
     # Check .gitignore
     if grep -qE "^\b$base_item\b" .gitignore 2>/dev/null; then
         return 0
@@ -54,6 +59,10 @@ print_file_contents() {
     fi
     if [ ! -f "$file_path" ]; then
         echo "File does not exist: $file_path"
+        return
+    fi
+    if [ "$(basename "$file_path")" = "fr.sh" ]; then
+        echo "Skipping fr.sh script"
         return
     fi
     if [[ "$file_path" =~ \.(py|js|ts|jsx|tsx|vue|rb|php|java|go|rs|c|cpp|h|hpp|cs|swift|kt|scala|html|css|scss|less|md|txt|sh|bash|zsh|json|yaml|yml|xml|sql|graphql|r|m|f|f90|jl|lua|pl|pm|t|ps1|bat|asm|s|nim|ex|exs|clj|lisp|hs|erl|elm)$ ]]; then

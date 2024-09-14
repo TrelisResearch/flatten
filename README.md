@@ -7,7 +7,7 @@ Flatten is a tool for creating a repository structure file and a flattened repos
 To use the Flatten tool, copy the flatten repo `fr.sh` script into your repository:
 
 ```
-curl -O https://raw.githubusercontent.com/yourusername/flatten/main/fr.sh
+curl -O https://raw.githubusercontent.com/TrelisResearch/flatten/main/fr.sh
 chmod +x fr.sh
 ```
 
@@ -36,6 +36,7 @@ This will create both `repo_structure.yaml` and `flattened_repo.txt` files. The 
 ## Features
 
 - Ignores files and directories listed in `.gitignore` and `.flattenignore`
+- Automatically excludes the `fr.sh` script itself from flattening
 - Supports a wide range of text file formats commonly used in programming, including:
   - Web development (js, ts, jsx, tsx, vue, html, css, scss, less)
   - Backend languages (py, rb, php, java, go, rs, c, cpp, h, hpp, cs, swift, kt, scala)
