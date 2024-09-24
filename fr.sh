@@ -3,21 +3,56 @@
 # Function to check if a file/folder should be ignored
 should_ignore() {
     local item=$1
-    local base_item=$(basename "$item")
+    local relative_path=${item#./}  # Remove leading ./ if present
     
     # Check if the file is fr.sh itself
-    if [ "$base_item" = "fr.sh" ]; then
+    if [ "$(basename "$item")" = "fr.sh" ]; then
         return 0
     fi
     
+    # Function to check if a path matches an ignore pattern
+    matches_ignore_pattern() {
+        local pattern=$1
+        local path=$2
+        
+        # Remove trailing slash from pattern and path
+        pattern=${pattern%/}
+        path=${path%/}
+        
+        # If pattern starts with /, anchor it to the base directory
+        if [[ $pattern == /* ]]; then
+            pattern=${pattern#/}
+            if [[ $path == $pattern || $path == $pattern/* ]]; then
+                return 0
+            fi
+        else
+            # For relative patterns, match any part of the path
+            if [[ $path == */$pattern || $path == $pattern || $path == $pattern/* ]]; then
+                return 0
+            fi
+        fi
+        
+        return 1
+    }
+    
     # Check .gitignore
-    if grep -qE "^\b$base_item\b" .gitignore 2>/dev/null; then
-        return 0
+    if [ -f ".gitignore" ]; then
+        while IFS= read -r pattern || [[ -n "$pattern" ]]; do
+            pattern=$(echo "$pattern" | sed 's/#.*//' | xargs)  # Remove comments and trim
+            if [ -n "$pattern" ] && matches_ignore_pattern "$pattern" "$relative_path"; then
+                return 0
+            fi
+        done < .gitignore
     fi
     
     # Check .flattenignore
-    if [ -f ".flattenignore" ] && grep -qE "^\b$base_item\b" .flattenignore 2>/dev/null; then
-        return 0
+    if [ -f ".flattenignore" ]; then
+        while IFS= read -r pattern || [[ -n "$pattern" ]]; do
+            pattern=$(echo "$pattern" | sed 's/#.*//' | xargs)  # Remove comments and trim
+            if [ -n "$pattern" ] && matches_ignore_pattern "$pattern" "$relative_path"; then
+                return 0
+            fi
+        done < .flattenignore
     fi
     
     return 1
