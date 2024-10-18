@@ -91,7 +91,6 @@ flattened_file="flattened_repo.txt"
 rm -f "$output_file" "$flattened_file"
 
 # Generate YAML structure
-echo "planChat" > "$output_file"
 generate_yaml . "  " ""
 echo "YAML file with folder/file structure has been created as $output_file."
 
