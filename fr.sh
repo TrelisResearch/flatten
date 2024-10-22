@@ -10,9 +10,9 @@ should_ignore() {
         return 0
     fi
     
-    # Check .gitignore
-    if grep -qE "^\b$base_item\b" .gitignore 2>/dev/null; then
-        return 0
+    # Use git check-ignore to ask Git whether the item is ignored
+    if git check-ignore -q "$item"; then
+        return 0  # The file/folder is ignored
     fi
     
     # Check .flattenignore
