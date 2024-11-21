@@ -4,6 +4,8 @@ Flatten is a tool for creating a repository structure file and a flattened repos
 
 This is particularly useful for coding, e.g. with Cursor, where you can include your folder structure within a chat to ground the model.
 
+Watch the [YouTube demo](https://www.youtube.com/watch?v=cvp0WZqIJ_4).
+
 ## Installation
 
 To use the Flatten tool, copy the flatten repo `fr.sh` script into your repository:
